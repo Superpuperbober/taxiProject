@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
+    <title> Поиск Автомобиля </title>
+    {% macro render_checkbox(relation, selected_list, name) %}
+        {% for i in range(relation|length) %}
+            {% set value = relation.loc[i, relation.dtypes.index[0]] %}
+            <div class="flex row">
+            <input 
+                type="checkbox" 
+                name="{{name}}" 
+                value="{{value}}" 
+                {% if value in selected_list %} checked="checked" {% endif %}
+            />{{value + " (" + relation.loc[i, relation.dtypes.index[1]]|string + ")"}}
+            </div>
+        {% endfor %}
+    {% endmacro %}
+
+    {% macro render_drives(df_drives) %}
+        {% for i in range(df_drives|length) %}
+            <div class="flex column width50">
+                <p>Комментарий к поездке: {{df_drives.loc[i, "title"]}}</p>
+                <p>Организатор: {{df_drives.loc[i, "orgs"]}}</p>
+                <p>Место назначения: {{df_drives.loc[i, "wherego_name"]}}</p>
+                <p>Место встречи: {{df_drives.loc[i, "fromgo_name"]}}</p>
+                <p>Количество свободных мест: {{df_drives.loc[i, "available_numbers"]}}</p>
+                <p>drive_id: {{df_drives.loc[i, "drive_id"]}}</p>
+                <form action='{{url_for("index")}}' method ="get">
+                    <p>{{i}}</p>
+                    <input type="hidden" value="{{df_drives.loc[i, 'drive_id']}}" name="drive">
+                    <input type="submit" value="Выбрать" {% if not df_drives.loc[i, "available_numbers"] %} disabled="disabled" {% endif %}>
+                </form> 
+            </div> 
+        {% endfor %}
+    {% endmacro %}
+</head>
+<body>
+    <div class=menu>
+        <ul>
+            <li class = active><a href={{ url_for("search")}}>Поиск поездки</a></li>
+        </ul>
+    </div>
+    <div class=block>
+        <p>
+            <form action='' method ="post">
+                <div class="flex row">
+                    <div class="flex column width15">
+                        <div class="flex column">
+                            <details><summary>Организаторы</summary>{{ render_checkbox(df_orgs, selected_orgs, "orgs") }}</details>
+                            <details><summary>Место назначения</summary>{{ render_checkbox(df_wheregos, selected_wheregos, "wheregos")}}</details>
+                            <details><summary>Место встречи</summary>{{ render_checkbox(df_fromgos, selected_fromgos, "fromgos")}}</details>
+                        </div>
+                        <input type="submit" value="Очистить" name="reset" />
+                        <input type="submit" value="Применить" name="confirm" />
+                    </div>
+                    <div class="flex column width85">
+                        <div class="flex column">
+                            <div class="block">
+                                {% if selected_orgs %}
+                                    Организаторы: {{", ".join(selected_orgs)}} <br>
+                                {% endif %}
+                                {% if selected_wheregos %}
+                                    Место назанчения: {{", ".join(selected_wheregos)}} <br>
+                                {% endif %}
+                                {% if selected_fromgos %}
+                                    Место встречи: {{", ".join(selected_fromgos)}}
+                                {% endif %}
+                            </div>
+            </form>
+                            <div class="flex row wrap">
+                                {{ render_drives(df_drives) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <form action='{{url_for("index")}}' method ="get">
+                <input type="submit" value="Не поеду" />
+            </form> 
+        </p>
+    </div>
+</body>
+</html>

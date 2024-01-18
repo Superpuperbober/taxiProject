@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Новая поездка</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
+
+    {% macro render_select(select_name, vis_field, val_field, combo_box) %}
+        <select name='{{select_name}}'>
+            {% for i in range(len(combo_box)) %}
+                <option value="{{ combo_box.loc[i, val_field] }}">{{combo_box.loc[i, vis_field]}}</option>
+                    {% endfor %}
+                </select>
+    {% endmacro %}
+
+</head>
+<body>
+    <div class=menu>
+        <ul>
+            <li class = active><a href={{ url_for("index")}}>Пассажир</a></li>
+        </ul>
+    </div>
+    <p>
+        <form action="{{url_for('index')}}" method="get">
+            <label>
+                Место назначения:
+                {{render_select('wherego', 'wherego_name', 'wherego_id', df_wherego)}}
+            </label>
+            <p></p>
+            <label>
+                Место отправления:
+                {{render_select('fromgo', 'fromgo_name', 'fromgo_id', df_fromgo)}}
+            </label>
+            <p></p>
+            <label>
+                Комментарий к поездке:
+                <input type="text" maxlength="80" name="title" />
+            </label>
+            <p></p>
+            <label>
+                Организатор:
+                {{render_select('org', 'org_name', 'org_id', df_org)}}
+            </label>
+             <p></p>
+            <label>
+                Цена:
+                <input type="number" min="0" name="price" />
+            </label>
+            <p></p>
+            <label>
+                Количество пассажиров:
+                <input type="number" min="0" name="available_numbers" />
+            </label>
+            <p></p>
+            <input type="submit" name="add_new_drive" value="Добавить" />
+        </form>
+
+    </p>
+</body>
+</html>

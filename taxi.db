@@ -1,0 +1,217 @@
+DROP TABLE IF EXISTS org;
+
+CREATE TABLE org (
+       org_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	   org_name VARCHAR(30)
+);
+
+INSERT INTO org (org_name)  VALUES
+('Борщевский'),
+('Пяткин'),
+('Федоров'),
+('Перфильева'),
+('Полянская'),
+('Мищенко'),
+('Сусоева'),
+('Лысенко'),
+('Жигжитов'),
+('Аюров'),
+('Доширакова');
+
+DROP TABLE IF EXISTS wherego;
+
+CREATE TABLE wherego (
+       wherego_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	   wherego_name VARCHAR(30)
+);
+
+INSERT INTO wherego (wherego_name)  VALUES
+('Изумруд'),
+('Державино 21'),
+('Седанка'),
+('Аэропорт'),
+('Супра на набережной'),
+('МореМолл');
+
+DROP TABLE IF EXISTS fromgo;
+
+CREATE TABLE fromgo (
+       fromgo_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	   fromgo_name VARCHAR(40)
+);
+
+INSERT INTO fromgo (fromgo_name)  VALUES
+('корпус А'),
+('остановка Кампус ДВФУ'),
+('остановка МиниТЭЦ'),
+('гостиница 4'),
+('гостиница 9'),
+('корпус L'),
+('остановка окатовая');
+
+DROP TABLE IF EXISTS passanger;
+
+CREATE TABLE passanger (
+       passanger_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	   passanger_name VARCHAR(30)
+);
+
+INSERT INTO passanger (passanger_name)  VALUES
+('Баранова'),
+('Дрожина'),
+('Королев'),
+('Гладков'),
+('Киреева'),
+('Коновалова'),
+('Целенко');D
+
+DROP TABLE IF EXISTS drive;
+
+CREATE TABLE drive (
+      drive_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	  title VARCHAR(80),
+      wherego_id INT,
+      fromgo_id INT,
+      price INT,
+      available_numbers INT,
+      FOREIGN KEY (wherego_id)  REFERENCES wherego (wherego_id) ON DELETE CASCADE,
+      FOREIGN KEY (fromgo_id)  REFERENCES publisher (fromgo_id) ON DELETE CASCADE
+);
+
+INSERT INTO drive(title, wherego_id, fromgo_id, price, available_numbers)  VALUES
+('Своя машина', 1, 3, 500, 1),
+('С баулами', 1, 1, 1000, 3),
+('нет комментария', 1, 5, 350, 5),
+('Своя машина', 2, 4, 400, 0),
+('Своя машина', 3, 5, 800, 2),
+('нет комментария', 1, 4, 900, 8),
+('Бородино', 4, 6, 200, 0),
+('такси', 5, 5, 1000, 2),
+('нет комментария', 5, 3, 1200, 9),
+('такси', 1, 5, 300, 7),
+('такси', 1, 5, 500, 6),
+('нет комментария', 5, 3, 550, 2),
+('Своя машина', 2, 5, 450, 5),
+('Своя машина', 3, 1, 340, 8),
+('нет комментария', 3, 4, 660, 9),
+('Своя машина', 3, 5, 220, 5),
+('Своя машина', 1, 4, 400, 5),
+('нет комментария', 3, 4, 700, 0),
+('Своя машина', 3, 3, 300, 1),
+('нет комментария', 3, 5, 250, 1),
+('такси', 2, 2, 390, 0),
+('нет комментария', 4, 1, 340, 6),
+('нет комментария', 4, 6, 450, 8),
+('Своя машина', 1, 6, 120, 2),
+('Своя машина', 4, 3, 2017, 5),
+('нет комментария', 1, 2, 800, 3),
+('нет комментария', 4, 3, 210, 2),
+('нет комментария', 4, 4, 220, 5),
+('нет комментария', 3, 5, 260, 2);
+
+
+DROP TABLE IF EXISTS drive_org;
+
+CREATE TABLE drive_org (
+      drive_org_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      drive_id INT,
+      org_id INT,
+      FOREIGN KEY (drive_id)  REFERENCES drive (drive_id) ON DELETE CASCADE,
+      FOREIGN KEY (org_id)  REFERENCES org (org_id) ON DELETE CASCADE
+);
+
+INSERT INTO drive_org(drive_id, org_id)  VALUES
+(1, 4),
+(1, 5),
+(2, 4),
+(2, 5),
+(3, 6),
+(4, 3),
+(5, 2),
+(6, 1),
+(7, 7),
+(8, 8),
+(8, 9),
+(9, 8),
+(9, 9),
+(10, 1),
+(11, 6),
+(12, 8),
+(12, 9),
+(13, 3),
+(14, 2),
+(15, 2),
+(16, 2),
+(17, 1),
+(18, 10),
+(19, 10),
+(20, 10),
+(21, 10),
+(22, 1),
+(23, 1),
+(24, 7),
+(25, 7),
+(26, 4),
+(26, 5),
+(27, 7),
+(28, 7),
+(29, 2);
+
+DROP TABLE IF EXISTS drive_passanger;
+
+CREATE TABLE drive_passanger (
+      drive_passanger_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      drive_id int,
+      passanger_id INT,
+	  borrow_date DATE,
+	  return_date DATE,
+      FOREIGN KEY (drive_id)  REFERENCES drive (drive_id) ON DELETE CASCADE,
+      FOREIGN KEY (passanger_id)  REFERENCES passanger (passanger_id) ON DELETE CASCADE
+);
+
+INSERT INTO drive_passanger(drive_id, passanger_id, borrow_date, return_date)  VALUES
+( 4, 4, '2020-09-11', '2020-09-24'),
+( 12, 6, '2020-09-11', Null),
+( 29, 5, '2020-09-17', '2020-10-10'),
+( 27, 6, '2020-09-18', '2020-10-14'),
+( 15, 4, '2020-09-18', '2020-10-04'),
+( 18, 1, '2020-09-21', '2020-10-09'),
+( 22, 4, '2020-09-25', '2020-10-10'),
+( 1, 3, '2020-09-28', '2020-10-07'),
+( 26, 2, '2020-09-30', '2020-10-08'),
+( 27, 1, '2020-10-05', '2020-10-13'),
+( 18, 2, '2020-10-06', NULL),
+( 26, 2, '2020-10-06', '2020-10-26'),
+( 11, 1, '2020-10-06', '2020-10-13'),
+( 3, 5, '2020-10-08', '2020-10-27'),
+( 20, 6, '2020-10-08', '2020-10-23'),
+( 20, 3, '2020-10-09', '2020-10-29'),
+( 2, 2, '2020-10-09', '2020-10-12'),
+( 27, 6, '2020-10-13', '2020-10-17'),
+( 28, 4, '2020-10-15', '2020-11-04'),
+( 5, 1, '2020-10-15', '2020-10-18'),
+( 29, 1, '2020-10-15', '2020-10-29'),
+( 3, 6, '2020-10-15', Null),
+( 9, 6, '2020-10-16', '2020-10-19'),
+( 15, 2, '2020-10-17', '2020-11-08'),
+( 8, 6, '2020-10-19', Null),
+( 18, 1, '2020-10-20', NULL),
+( 23, 5, '2020-10-21', Null),
+( 4, 5, '2020-10-22', '2020-10-28'),
+( 26, 3, '2020-10-23', '2020-10-28'),
+( 5, 6, '2020-10-24', '2020-11-01'),
+( 8, 2, '2020-10-28', '2020-11-18'),
+( 21, 5, '2020-10-30', NUll),
+( 20, 1, '2020-10-30', '2020-11-26'),
+( 14, 4, '2020-10-30', '2020-11-10'),
+( 8, 6, '2020-11-01', Null),
+( 11, 4, '2020-11-06', '2020-11-26'),
+( 28, 6, '2020-11-09', '2020-11-28'),
+( 14, 3, '2020-11-14', Null),
+( 24, 2, '2020-11-15', Null),
+( 5, 6, '2020-11-17', Null),
+( 11, 3, '2020-11-21', '2020-12-12'),
+( 14, 1, '2020-11-23', Null),
+( 4, 5, '2020-11-23', Null),
+( 23, 5, '2020-11-28', Null),
+( 21, 3, '2020-11-29', '2020-12-21');
